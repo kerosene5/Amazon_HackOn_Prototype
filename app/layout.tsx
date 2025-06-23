@@ -28,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
-      <body className={spaceGrotesk.className}>{children}</body>
+      <body className={jetbrainsMono.className}>{children}</body>
     </html>
   )
 }

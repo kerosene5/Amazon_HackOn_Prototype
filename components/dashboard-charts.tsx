@@ -1,8 +1,9 @@
 "use client"
 
 import { useMemo } from "react"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Area, AreaChart, ScatterChart, Scatter } from "recharts"
-import { TrendingUp, AlertTriangle, Shield, Activity, BarChart3 } from "lucide-react"
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Area, AreaChart, ScatterChart, Scatter } from "recharts"
+import { TrendingUp, AlertTriangle, Shield, Activity, BarChart3, Info } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface Product {
   asin: string
@@ -106,18 +107,30 @@ export function DashboardCharts({ products }: DashboardChartsProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Category Distribution */}
         <div className="tte-card p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-gradient-to-br from-[#374151] to-[#4b5563] rounded-lg">
-              <BarChart3 className="w-5 h-5 tte-accent-text" />
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-[#374151] to-[#4b5563] rounded-lg">
+                <BarChart3 className="w-5 h-5 tte-accent-text" />
+              </div>
+              <h3 className="text-lg font-semibold text-white">Category Distribution</h3>
             </div>
-            <h3 className="text-lg font-semibold text-white">Category Distribution</h3>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Info className="w-4 h-4 text-white/50" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Shows the number of trusted vs. flagged products in each category.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={chartData.categoryChartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis dataKey="category" stroke="#9ca3af" fontSize={12} />
               <YAxis stroke="#9ca3af" fontSize={12} />
-              <Tooltip
+              <RechartsTooltip
                 contentStyle={{
                   backgroundColor: "#1f2937",
                   border: "1px solid #374151",
@@ -133,11 +146,23 @@ export function DashboardCharts({ products }: DashboardChartsProps) {
 
         {/* Risk Level Distribution */}
         <div className="tte-card p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-gradient-to-br from-[#374151] to-[#4b5563] rounded-lg">
-              <AlertTriangle className="w-5 h-5 tte-accent-text" />
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-[#374151] to-[#4b5563] rounded-lg">
+                <AlertTriangle className="w-5 h-5 tte-accent-text" />
+              </div>
+              <h3 className="text-lg font-semibold text-white">Risk Level Distribution</h3>
             </div>
-            <h3 className="text-lg font-semibold text-white">Risk Level Distribution</h3>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Info className="w-4 h-4 text-white/50" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Distribution of products based on their RRDI risk score.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -155,13 +180,13 @@ export function DashboardCharts({ products }: DashboardChartsProps) {
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip
+              <RechartsTooltip
                 contentStyle={{
                   backgroundColor: "#1f2937",
                   border: "1px solid #374151",
                   borderRadius: "8px",
-                  color: "#ffffff",
                 }}
+                itemStyle={{ color: "#ffffff" }}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -172,18 +197,30 @@ export function DashboardCharts({ products }: DashboardChartsProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Fraud Trend */}
         <div className="tte-card p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-gradient-to-br from-[#374151] to-[#4b5563] rounded-lg">
-              <TrendingUp className="w-5 h-5 tte-accent-text" />
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-[#374151] to-[#4b5563] rounded-lg">
+                <TrendingUp className="w-5 h-5 tte-accent-text" />
+              </div>
+              <h3 className="text-lg font-semibold text-white">Fraud Detection Trend</h3>
             </div>
-            <h3 className="text-lg font-semibold text-white">Fraud Detection Trend</h3>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Info className="w-4 h-4 text-white/50" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Simulated trend of flagged vs. trusted products over time.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={chartData.trendData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis dataKey="time" stroke="#9ca3af" fontSize={12} />
               <YAxis stroke="#9ca3af" fontSize={12} />
-              <Tooltip
+              <RechartsTooltip
                 contentStyle={{
                   backgroundColor: "#1f2937",
                   border: "1px solid #374151",
@@ -199,24 +236,37 @@ export function DashboardCharts({ products }: DashboardChartsProps) {
 
         {/* Return Rate vs RRDI Correlation */}
         <div className="tte-card p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-gradient-to-br from-[#374151] to-[#4b5563] rounded-lg">
-              <Activity className="w-5 h-5 tte-accent-text" />
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-[#374151] to-[#4b5563] rounded-lg">
+                <Activity className="w-5 h-5 tte-accent-text" />
+              </div>
+              <h3 className="text-lg font-semibold text-white">Return Rate vs RRDI</h3>
             </div>
-            <h3 className="text-lg font-semibold text-white">Return Rate vs RRDI</h3>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Info className="w-4 h-4 text-white/50" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Shows the relationship between product return rates and RRDI scores.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <ScatterChart data={chartData.correlationData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis type="number" dataKey="rrdi" name="RRDI" stroke="#9ca3af" fontSize={12} />
               <YAxis type="number" dataKey="returnRate" name="Return Rate %" stroke="#9ca3af" fontSize={12} />
-              <Tooltip
+              <RechartsTooltip
+                cursor={{ strokeDasharray: "3 3" }}
                 contentStyle={{
                   backgroundColor: "#1f2937",
                   border: "1px solid #374151",
                   borderRadius: "8px",
-                  color: "#ffffff",
                 }}
+                itemStyle={{ color: "#ffffff" }}
               />
               <Scatter dataKey="returnRate" fill={COLORS.primary} />
             </ScatterChart>

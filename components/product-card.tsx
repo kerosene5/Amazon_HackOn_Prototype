@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { AlertTriangle, Shield, TrendingUp, Users, ExternalLink, Ban } from "lucide-react"
+import { AlertTriangle, Shield, TrendingUp, Star, ExternalLink, Ban } from "lucide-react"
 import type { Product } from "@/lib/fraud-logic"
 
 interface ProductCardProps {
@@ -36,7 +36,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
 
   return (
     <div
-      className={`tte-card p-8 cursor-pointer animate-fade-in-up gradient-overlay shadow-premium group ${
+      className={`tte-card p-8 cursor-pointer animate-fade-in-up gradient-overlay shadow-premium group card-hover-glow ${
         product.is_blocked ? "opacity-60" : ""
       }`}
       style={{ animationDelay: `${index * 100}ms` }}
@@ -60,14 +60,22 @@ export function ProductCard({ product, index }: ProductCardProps) {
       {/* Key Metrics */}
       <div className="grid grid-cols-2 gap-6 mb-8">
         <div className="metric-card text-center group/metric">
-          <div className="text-3xl font-bold tte-accent-text mb-2 mono group-hover/metric:scale-110 transition-transform">
+          <div
+            className={`text-3xl font-bold mb-2 mono group-hover/metric:scale-110 transition-transform ${
+              product.is_fraudulent_product ? "tte-accent-text" : "text-green-400"
+            }`}
+          >
             {product.rrdi.toFixed(3)}
           </div>
           <div className="text-xs tte-text-muted uppercase tracking-wider font-semibold">RRDI Score</div>
           <div className="text-xs text-white/50 mt-1">Risk indicator</div>
         </div>
         <div className="metric-card text-center group/metric">
-          <div className="text-3xl font-bold text-white mb-2 mono group-hover/metric:scale-110 transition-transform">
+          <div
+            className={`text-3xl font-bold mb-2 mono group-hover/metric:scale-110 transition-transform ${
+              product.is_fraudulent_product ? "tte-accent-text" : "text-green-400"
+            }`}
+          >
             {product.trust_score}%
           </div>
           <div className="text-xs tte-text-muted uppercase tracking-wider font-semibold">Trust Score</div>
@@ -86,10 +94,10 @@ export function ProductCard({ product, index }: ProductCardProps) {
         </div>
         <div className="flex items-center justify-between interactive-element p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
           <div className="flex items-center gap-3 tte-text-muted">
-            <Users className="w-4 h-4" />
-            <span className="text-sm font-medium">Reviews</span>
+            <Star className="w-4 h-4" />
+            <span className="text-sm font-medium">Review Score</span>
           </div>
-          <span className="text-sm font-bold text-white mono">{product.total_reviews}</span>
+          <span className="text-sm font-bold text-white mono">{product.review_score.toFixed(2)}</span>
         </div>
       </div>
 

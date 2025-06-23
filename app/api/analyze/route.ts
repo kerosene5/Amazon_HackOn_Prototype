@@ -1,13 +1,24 @@
 import { type NextRequest, NextResponse } from "next/server"
+import { getProduct } from "@/lib/db"
 
 export async function POST(request: NextRequest) {
   try {
-    const { product } = await request.json()
+    const { asin } = await request.json()
+
+    if (!asin || typeof asin !== 'string') {
+        return NextResponse.json({ error: "ASIN is required" }, { status: 400 })
+    }
+
+    const product = getProduct(asin)
+
+    if (!product) {
+        return NextResponse.json({ error: "Product not found" }, { status: 404 })
+    }
 
     // Simulate AI analysis processing
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1500))
 
-    const trustScore = Math.round((1 - product.rrdi) * 100)
+    const trustScore = product.trust_score;
     const riskLevel = product.rrdi > 0.4 ? "High" : product.rrdi > 0.2 ? "Medium" : "Low"
 
     const analysis = {
@@ -38,7 +49,7 @@ export async function POST(request: NextRequest) {
       },
     }
 
-    return NextResponse.json({ analysis })
+    return NextResponse.json({ analysis, product })
   } catch (error) {
     console.error("Analysis error:", error)
     return NextResponse.json({ error: "Failed to analyze product" }, { status: 500 })

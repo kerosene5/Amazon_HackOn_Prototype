@@ -170,10 +170,16 @@ const productDataSource: ProductData[] = [
 // In a real application, this would happen on the backend when data is ingested or updated.
 function enrichProductData(data: ProductData): Product {
   const rrdi = calculateRrdi(data)
+  const trust_score = calculateTrustScore(data, rrdi)
+  
+  // Calculate return quality score (inverse of return rate, normalized to 0-100)
+  const return_quality_score = Math.round((1 - data.return_rate) * 100)
+  
   return {
     ...data,
     rrdi,
-    trust_score: calculateTrustScore(data, rrdi),
+    trust_score,
+    return_quality_score,
     is_fraudulent_product: isFraudulent(data, rrdi),
     is_blocked: false, // Initially, no products are blocked
   }

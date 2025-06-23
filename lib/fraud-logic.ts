@@ -19,6 +19,7 @@ export interface ProductData {
 export interface Product extends ProductData {
   rrdi: number
   trust_score: number
+  return_quality_score: number
   is_fraudulent_product: boolean
   is_blocked: boolean
 }

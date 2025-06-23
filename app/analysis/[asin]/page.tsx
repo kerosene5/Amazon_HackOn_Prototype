@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useParams, useRouter } from "next/navigation"
+import { useParams, useRouter, notFound } from "next/navigation"
 import { ArrowLeft, RotateCcw, Brain } from "lucide-react"
-import { Navigation } from "@/components/navigation"
+import { SiteHeader } from "@/components/site-header"
 import { NetworkGraph } from "@/components/network-graph"
 import { TrustBadge } from "@/components/trust-badge"
 import { MetricsGrid } from "@/components/metrics-grid"
@@ -30,7 +30,7 @@ export default function AnalysisPage() {
   if (loading) {
     return (
       <div className="min-h-screen tte-grid-bg">
-        <Navigation />
+        <SiteHeader />
         <div className="flex items-center justify-center h-96">
           <div className="tte-spinner"></div>
         </div>
@@ -41,7 +41,7 @@ export default function AnalysisPage() {
   if (!product) {
     return (
       <div className="min-h-screen tte-grid-bg">
-        <Navigation />
+        <SiteHeader />
         <div className="flex items-center justify-center h-96">
           <div className="text-center animate-fade-in-up">
             <h2 className="tte-heading-md mb-4">Product Not Found</h2>
@@ -57,7 +57,7 @@ export default function AnalysisPage() {
 
   return (
     <div className="min-h-screen tte-grid-bg page-transition">
-      <Navigation />
+      <SiteHeader />
 
       {/* Header */}
       <header className="border-b border-[#374151] py-6 animate-slide-in-left">
@@ -95,7 +95,7 @@ export default function AnalysisPage() {
                 <h4 className="text-lg font-semibold text-white">Relationship Network</h4>
                 <button className="tte-btn tte-btn-ghost">
                   <RotateCcw className="w-4 h-4 mr-2" />
-                  Reset View
+                  Refresh Graph
                 </button>
               </div>
               <div className="h-96 bg-[#0a0e1a] rounded-xl overflow-hidden">
@@ -109,14 +109,8 @@ export default function AnalysisPage() {
             <div className="tte-card p-6">
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-[#ff6b6b]/10 rounded-lg animate-glow">
-                    <Brain className="w-5 h-5 tte-accent-text" />
-                  </div>
-                  <h4 className="text-lg font-semibold text-white">AI Trust Analysis</h4>
-                </div>
-                <div className="flex items-center gap-2 tte-accent-text text-sm font-medium">
-                  <div className="w-2 h-2 bg-[#ff6b6b] rounded-full animate-pulse"></div>
-                  AI Powered
+                  <Brain className="w-6 h-6 text-tte-accent" />
+                  <h4 className="text-lg font-semibold text-white">AI-Powered Explanation</h4>
                 </div>
               </div>
               <AIExplanation product={product} />

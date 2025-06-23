@@ -31,8 +31,8 @@ export function NetworkGraph({ product }: NetworkGraphProps) {
     const svg = svgRef.current
     svg.innerHTML = ""
 
-    const width = svg.clientWidth || 600
-    const height = svg.clientHeight || 400
+    const width = 600
+    const height = 400
 
     // Create nodes with hex.tech color scheme
     const nodes = [

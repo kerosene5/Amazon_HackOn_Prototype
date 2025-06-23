@@ -1,39 +1,64 @@
 import { NextResponse } from "next/server"
-import { getProducts, updateProduct } from "@/lib/db"
+import { fraudAgent } from "@/lib/fraud-agent"
 
-export const dynamic = "force-dynamic" // Defaults to auto
+export const dynamic = "force-dynamic"
 
-// This endpoint simulates an agentic workflow that runs on a schedule or trigger.
-// It scans for products with strong fraud signals and automatically blocks them.
+// This endpoint triggers the sophisticated fraud detection agent
 export async function GET() {
   try {
-    const products = getProducts()
-    const productsToBlock = products.filter(
-      (p) => p.gnn_fraud_signal && !p.is_blocked
-    )
-
-    if (productsToBlock.length === 0) {
+    const agentStatus = fraudAgent.getStatus()
+    
+    if (agentStatus.isRunning) {
       return NextResponse.json({
-        message: "Agent check complete. No new products to block.",
-        blockedCount: 0,
-      })
+        error: "Agent is already running",
+        status: agentStatus,
+      }, { status: 409 })
     }
 
-    // Block each product identified by the GNN signal
-    for (const product of productsToBlock) {
-      updateProduct(product.asin, { is_blocked: true })
-    }
+    console.log("🚀 Starting fraud detection agent...")
+    
+    const result = await fraudAgent.runFraudDetection()
+    
+    const updatedStatus = fraudAgent.getStatus()
+    const recentActions = fraudAgent.getRecentActions()
 
     return NextResponse.json({
-      message: `Agent check complete. Successfully blocked ${productsToBlock.length} products.`,
-      blockedCount: productsToBlock.length,
-      blocked_asins: productsToBlock.map((p) => p.asin),
+      success: true,
+      message: `Agent completed successfully. Analyzed ${result.analyzed} products.`,
+      results: {
+        analyzed: result.analyzed,
+        blocked: result.blocked,
+        flagged: result.flagged,
+        actions: result.actions,
+      },
+      status: updatedStatus,
+      recentActions: recentActions.slice(-5), // Last 5 actions
+      timestamp: new Date().toISOString(),
     })
   } catch (error) {
     console.error("Agent run error:", error)
-    return NextResponse.json(
-      { error: "Failed to run fraud detection agent." },
-      { status: 500 }
-    )
+    return NextResponse.json({
+      error: "Failed to run fraud detection agent",
+      details: error instanceof Error ? error.message : "Unknown error",
+    }, { status: 500 })
+  }
+}
+
+// Get agent status
+export async function POST() {
+  try {
+    const status = fraudAgent.getStatus()
+    const recentActions = fraudAgent.getRecentActions()
+    
+    return NextResponse.json({
+      status,
+      recentActions: recentActions.slice(-10), // Last 10 actions
+      timestamp: new Date().toISOString(),
+    })
+  } catch (error) {
+    console.error("Agent status error:", error)
+    return NextResponse.json({
+      error: "Failed to get agent status",
+    }, { status: 500 })
   }
 } 

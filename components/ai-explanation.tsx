@@ -9,6 +9,7 @@ interface Product {
   return_rate: number
   total_reviews: number
   rrdi: number
+  trust_score: number
   bayesian_smoothed_score: number
   smoothed_rrdi: number
   is_fraudulent_product: boolean
@@ -28,11 +29,16 @@ export function AIExplanation({ product }: AIExplanationProps) {
   useEffect(() => {
     // Simulate AI analysis
     setTimeout(() => {
-      const trustScore = Math.round((1 - product.rrdi) * 100)
+      const trustScore = product.trust_score
       const riskLevel = product.rrdi > 0.4 ? "High" : product.rrdi > 0.2 ? "Medium" : "Low"
 
       const generatedExplanation = `
         <div class="space-y-6 text-[#9ca3af] leading-relaxed">
+          <div class="p-4 bg-[#ff6b6b]/10 border border-[#ff6b6b]/20 rounded-lg">
+            <h6 class="text-[#ff6b6b] font-semibold mb-2">Recommended Action</h6>
+            <p class="text-white">${product.is_fraudulent_product ? "🔴 This product requires immediate review and potential delisting due to high fraud indicators. Consider suspending sales pending investigation." : "🟢 This product appears trustworthy and can continue normal operations with routine monitoring."}</p>
+          </div>
+
           <div class="p-4 bg-[#1f2937] rounded-lg border-l-4 ${product.is_fraudulent_product ? "border-red-400" : "border-green-400"}">
             <h5 class="text-white text-lg font-semibold mb-3">Executive Summary</h5>
             <p>Product ${product.asin} has been classified as <span class="${product.is_fraudulent_product ? "text-red-400 font-semibold" : "text-green-400 font-semibold"}">${product.is_fraudulent_product ? "HIGH RISK" : "TRUSTED"}</span> with an overall trust score of <span class="text-[#ff6b6b] font-semibold">${trustScore}%</span>.</p>
@@ -88,11 +94,6 @@ export function AIExplanation({ product }: AIExplanationProps) {
                 <div class="text-xs text-[#9ca3af]">Buyer engagement</div>
               </div>
             </div>
-          </div>
-          
-          <div class="p-4 bg-[#ff6b6b]/10 border border-[#ff6b6b]/20 rounded-lg">
-            <h6 class="text-[#ff6b6b] font-semibold mb-2">Recommended Action</h6>
-            <p class="text-white">${product.is_fraudulent_product ? "🔴 This product requires immediate review and potential delisting due to high fraud indicators. Consider suspending sales pending investigation." : "🟢 This product appears trustworthy and can continue normal operations with routine monitoring."}</p>
           </div>
         </div>
       `
