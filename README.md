@@ -1,6 +1,6 @@
-# Temporal Trust Engine
+# Amazon Trust Engine
 
-An AI-powered fraud detection dashboard for e-commerce platforms, featuring advanced analytics, real-time monitoring, and agentic workflows for automated fraud prevention.
+An AI-powered fraud detection dashboard for e-commerce platforms, featuring advanced analytics, real-time monitoring, and agentic workflows for automated fraud prevention!
 
 ## 🚀 Features
 
